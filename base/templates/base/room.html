@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Chat Room - {{ room_name }}{% endblock %}
+{% block title %}Chat Room - {{ room.name }}{% endblock %}
 
 {% block content %}
     <header class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">Chat Room: {{ room_name }}</h1>
+        <h1 class="text-3xl font-bold text-gray-800">Chat Room: {{ room.name }}</h1>
     </header>
     <section>
         <div id="chat-messages" class="border p-4 h-96 overflow-y-scroll mb-4">
