@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Chat Room - {{ room_name }}{% endblock %}
+
+{% block content %}
+    <header class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Chat Room: {{ room_name }}</h1>
+    </header>
+    <section>
+        <div id="chat-messages" class="border p-4 h-96 overflow-y-scroll mb-4">
+            <!-- Chat messages will be dynamically loaded here -->
+        </div>
+        <form id="chat-form" class="flex">
+            <input type="text" id="message-input" class="grow border p-2" placeholder="Type your message..." />
+            <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Send</button>
+        </form>
+    </section>
+{% endblock %}
