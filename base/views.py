@@ -30,5 +30,13 @@ def updateRoom(request, pk):
         if form.is_valid():
             form.save()
             return redirect('home')
-    context = {'form': form}
+    #context = {'form': form}
+    context = {'form': form, 'room': room} # Added room to context for better UX
     return render(request, 'base/room_form.html', context)
+def deleteRoom(request, pk):
+    room = Room.objects.get(id=pk)
+    if request.method == 'POST':
+        room.delete()
+        return redirect('home')
+    context = {'obj': room}
+    return render(request, 'base/delete.html', context)
