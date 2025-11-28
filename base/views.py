@@ -1,8 +1,35 @@
 from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.models import User 
+from django.contrib.auth import authenticate, login, logout
 from .models import Room, Topic
 from .forms import RoomForm
 from django.db.models import Q
 # Create your views here.
+def loginPage(request):
+    if request.method == 'POST':
+        # Handle login logic here
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        try:
+            user = User.objects.get(username=username)
+            if user.check_password(password):
+                # Log the user in (you would typically use Django's authentication system here)
+                return redirect('home')
+            else:
+                messages.error(request, 'Invalid password')    
+        except User.DoesNotExist:
+            messages.error(request, 'User does not exist')
+        
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Username OR password is incorrect')          
+        return render(request, 'base/login_register.html')
+    return render(request, 'base/login_register.html')
+
 def home(request):
     q=request.GET.get('q') if request.GET.get('q') != None else ''
     rooms = Room.objects.filter(Q(topic__name__icontains=q) | Q(name__icontains=q) | Q(description__icontains=q))
