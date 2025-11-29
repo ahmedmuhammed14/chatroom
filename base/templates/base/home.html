@@ -27,8 +27,10 @@
             <a href="{% url 'create-room' %}" class="inline-block mb-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Create New Room</a>
            {% for room in rooms %}
                 <div class="mb-4 p-4 border rounded shadow-sm">
+                    {% if request.user == room.host %}
                     <a href="{% url 'update-room' room.id %}" class="text-sm text-blue-500 hover:underline">Edit</a>
                     <a href="{% url 'delete-room' room.id %}" class="text-sm text-red-500 hover:underline ml-2">Delete</a>
+                    {% endif %}
                     <span class="text-gray-500"> @{{ room.host.username }}</span>
                     <h2 class="text-xl font-semibold text-gray-700">
                         {{room.id}}
