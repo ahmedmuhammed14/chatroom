@@ -2,46 +2,55 @@
 
 {% block title %}Chat Room - {{ room.name }}{% endblock %}
 
+
 {% block content %}
-    <header class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800">Chat Room: {{ room.name }}</h1>
-    </header>
-    <div>
-        <p class="text-gray-600 mb-4">{{ room.description }}</p>
-        <small class="text-gray-400">Topic: {{ room.topic.name }}</small>
-    </div>
-    <div class="my-6">
-        <h3>Conversation:</h3>
-        {% for message in messages %}
-            <div class="mb-2 p-2 border rounded">
-                <p><strong>@{{ message.user.username }}:</strong></p>
-                <p class="">{{ message.body }}</p>
-                <small class="text-gray-400">{{ message.created|timesince }} ago</small>
+<div class="max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
+    <div class="grid" style="grid-template-columns: 3fr 1fr; gap: 1.5rem;">
+        <div>
+            <header class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Chat Room: {{ room.name }}</h1>
+            </header>
+            <div>
+                <p class="text-gray-600 mb-4">{{ room.description }}</p>
+                <small class="text-gray-400">Topic: {{ room.topic.name }}</small>
             </div>
-        {% empty %}
-            <p class="text-gray-500">No messages yet. Be the first to say something!</p>
-        {% endfor %}
-    </div>
+            <div class="my-6 max-h-[60vh] overflow-y-auto">
+                <h3>Conversation:</h3>
+                {% for message in messages %}
+                    <div class="mb-2 p-2 border rounded">
+                        {% if request.user == message.user %}
+                        <a href="{% url 'delete-message' message.id %}" class="text-sm text-red-500 hover:underline float-right">Delete</a>
+                        {% endif %}
+                        <p><strong>@{{ message.user.username }}:</strong></p>
+                        <p class="">{{ message.body }}</p>
+                        <small class="text-gray-400">{{ message.created|timesince }} ago</small>
+                    </div>
+                {% empty %}
+                    <p class="text-gray-500">No messages yet. Be the first to say something!</p>
+                {% endfor %}
+            </div>
 
-
-    {% if request.user.is_authenticated %}  
-    <section>
-<form method="post" class="flex mt-4">
-        {% csrf_token %}
-        <input type="text" name="body" placeholder="Type your message..." class="grow border p-2" required />
-        <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Send</button> 
-    </form>   
-    </section>
-    {% endif  %}
-     <!--
-    <section>
-        <div id="chat-messages" class="border p-4 h-96 overflow-y-scroll mb-4">
-         Chat messages will be dynamically loaded here
+            {% if request.user.is_authenticated %}
+                <form method="post" class="flex mt-4">
+                    {% csrf_token %}
+                    <input type="text" name="body" placeholder="Type your message..." class="grow border p-2" required />
+                    <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Send</button>
+                </form>
+            {% endif %}
         </div>
-        <form id="chat-form" class="flex">
-            <input type="text" id="message-input" class="grow border p-2" placeholder="Type your message..." />
-            <button type="submit" class="ml-2 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Send</button>
-        </form>
-    </section>
-    -->
+
+        <div>
+            <h3 class="mt-8">Participants:</h3>
+            <ul class="list-disc list-inside">
+                {% for participant in room.participants.all %}
+                    <li>@{{ participant.username }}</li>
+                {% empty %}
+                    <li class="text-gray-500">No participants yet.</li>
+                {% endfor %}
+            </ul>
+            
+        </div>
+    </div>
+</div>
+
 {% endblock %}
