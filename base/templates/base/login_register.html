@@ -3,7 +3,10 @@
 {% block content %}
 <div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Login or Register</h2>
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+            {% if page == "login" %}Login{% else %}Register{% endif %}
+        </h2>
+        {% if page == "login" %}
         <div class="mt-8">
             <form method="post" class="space-y-6">
                 {% csrf_token %}
@@ -25,8 +28,27 @@
                     <input type="submit" value="Login"
                            class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                 </div>
+                <p class="mb-2">Don't have an account? Register below.</p>
+                <a href="{% url 'register' %}" class="text-blue-500 hover:underline">Go to Register</a>
             </form>
         </div>
+        {% else %}
+        <div class="mt-8">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                <h3 class="text-lg font-medium text-gray-700">Register</h3>
+
+                
+{{ form.as_p }}
+                <div class="mb-4">
+                    <input type="submit" value="Register"
+                           class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                </div>
+                <p class="mb-2">Already have an account? Login above.</p>
+                <a href="{% url 'login' %}" class="text-blue-500 hover:underline">Go to Login</a>
+            </form>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
