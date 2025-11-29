@@ -1,0 +1,22 @@
+ <h3 class="text-lg font-semibold mb-4">Recent Activities:</h3>
+            <ul class="space-y-2">
+                {% for message in recent_messages %}
+                    <li class="border-b pb-2">
+                        <p>
+                            replied to {{ message.room.name }}:
+                            <strong>@{{ message.user.username }}:</strong>
+                            {{ message.body|truncatechars:50 }}
+                        </p>
+                        {% if message.user == request.user %}
+                        <a href="{% url 'delete-message' message.id %}" class="text-sm text-red-500 hover:underline">Delete</a>
+                        {% endif %}
+                        <small class="text-gray-400">{{ message.created|timesince }} ago in
+                            <a href="{% url 'room' message.room.id %}" class="text-blue-500 hover:underline">
+                                {{ message.room.name }}
+                            </a>
+                        </small>
+                    </li>
+                {% empty %}
+                    <li class="text-gray-500">No recent activities.</li>
+                {% endfor %}
+            </ul>

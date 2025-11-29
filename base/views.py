@@ -53,8 +53,9 @@ def home(request):
     q=request.GET.get('q') if request.GET.get('q') != None else ''
     rooms = Room.objects.filter(Q(topic__name__icontains=q) | Q(name__icontains=q) | Q(description__icontains=q))
     rooms_count = rooms.count()
+    room_messages = Message.objects.filter(Q(room__topic__name__icontains=q)).order_by('-created')[:5]
     topics = Topic.objects.all()
-    context = {'rooms': rooms, 'topics': topics, 'rooms_count': rooms_count, 'q': q}
+    context = {'rooms': rooms, 'topics': topics, 'rooms_count': rooms_count, 'q': q, 'recent_messages': room_messages}
     return render(request, 'base/home.html', context)
 
 def room(request, pk):
