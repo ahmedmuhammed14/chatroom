@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.models import User 
+#from django.contrib.auth.models import User 
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Room, Topic
+from .models import Room, Topic, Message
 from .forms import RoomForm
 from django.db.models import Q
 from django.http import HttpResponse
@@ -59,7 +59,17 @@ def home(request):
 
 def room(request, pk):
     room = Room.objects.get(id=pk)
-    context = {'room': room}
+    messages = room.messages.all().order_by('-created')
+
+    if request.method == 'POST':
+        message = Message.objects.create(
+            user=request.user,
+            room=room,
+            body=request.POST.get('body')
+        )
+        return redirect('room', pk=room.id)
+    
+    context = {'room': room, 'messages': messages}
     return render(request, 'base/room.html', context)
 
 @login_required(login_url='login')
