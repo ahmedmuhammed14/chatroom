@@ -1,10 +1,11 @@
  <h3 class="text-lg font-semibold mb-4">Recent Activities:</h3>
             <ul class="space-y-2">
-                {% for message in recent_messages %}
+                {% for message in room_messages %}
                     <li class="border-b pb-2">
                         <p>
                             replied to {{ message.room.name }}:
-                            <strong>@{{ message.user.username }}:</strong>
+                            <a href="{% url 'user-profile' message.user.id %}">
+                            <strong>@{{ message.user.username }}:</strong> </a>
                             {{ message.body|truncatechars:50 }}
                         </p>
                         {% if message.user == request.user %}
