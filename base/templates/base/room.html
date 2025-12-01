@@ -116,7 +116,7 @@
 
       </div>
       <div class="room__message">
-        <form action="" method="POST">
+        <form class="room__messageForm" action="" method="POST">
           {% csrf_token %}
           <input name="body" placeholder="Write your message here..." />
           <button class="btn btn--main" type="submit">Send</button>

@@ -1127,6 +1127,23 @@ a {
   color: var(--color-light-gray);
 }
 
+.room__messageForm {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.room__messageForm input {
+  flex: 1;
+  margin-top: 0;
+}
+
+.room__messageForm button {
+  height: 4.5rem;
+  align-self: flex-end;
+  margin-bottom: 0.5rem;
+}
+
 .participants__top span {
   color: var(--color-main);
   font-size: 1.3rem;
