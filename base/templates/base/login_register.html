@@ -1,54 +1,97 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
-            {% if page == "login" %}Login{% else %}Register{% endif %}
-        </h2>
-        {% if page == "login" %}
-        <div class="mt-8">
-            <form method="post" class="space-y-6">
-                {% csrf_token %}
-                <h3 class="text-lg font-medium text-gray-700">Login</h3>
+<main class="auth layout">
 
-                <div class="mb-4">
-                    <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Username:</label>
-                    <input type="text" id="username" name="username" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                <div class="mb-4">
-                    <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password:</label>
-                    <input type="password" id="password" name="password" required
-                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                <div class="mb-4">
-                    <input type="submit" value="Login"
-                           class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                </div>
-                <p class="mb-2">Don't have an account? Register below.</p>
-                <a href="{% url 'register' %}" class="text-blue-500 hover:underline">Go to Register</a>
-            </form>
+  {% if page == 'login' %}
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Login</h3>
         </div>
-        {% else %}
-        <div class="mt-8">
-            <form method="post" class="space-y-6">
-                {% csrf_token %}
-                <h3 class="text-lg font-medium text-gray-700">Register</h3>
+      </div>
+      <div class="layout__body">
+        <h2 class="auth__tagline">Find your study partner</h2>
 
-                
-{{ form.as_p }}
-                <div class="mb-4">
-                    <input type="submit" value="Register"
-                           class="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                </div>
-                <p class="mb-2">Already have an account? Login above.</p>
-                <a href="{% url 'login' %}" class="text-blue-500 hover:underline">Go to Login</a>
-            </form>
+        <form class="form" action="" method="POST">
+          {% csrf_token %}
+          <div class="form__group form__group">
+            <label for="room_name">Email</label>
+            <input id="username" name="email" type="email" placeholder="e.g. dennis_ivy@email.com />
+          </div>
+          <div class=" form__group">
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password"
+              placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" />
+          </div>
+
+          <button class="btn btn--main" type="submit">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+              <title>lock</title>
+              <path
+                d="M27 12h-1v-2c0-5.514-4.486-10-10-10s-10 4.486-10 10v2h-1c-0.553 0-1 0.447-1 1v18c0 0.553 0.447 1 1 1h22c0.553 0 1-0.447 1-1v-18c0-0.553-0.447-1-1-1zM8 10c0-4.411 3.589-8 8-8s8 3.589 8 8v2h-16v-2zM26 30h-20v-16h20v16z">
+              </path>
+              <path
+                d="M15 21.694v4.306h2v-4.306c0.587-0.348 1-0.961 1-1.694 0-1.105-0.895-2-2-2s-2 0.895-2 2c0 0.732 0.413 1.345 1 1.694z">
+              </path>
+            </svg>
+
+            Login
+          </button>
+        </form>
+
+        <div class="auth__action">
+          <p>Haven't signed up yet?</p>
+          <a href="{% url 'register' %}" class="btn btn--link">Sign Up</a>
         </div>
-        {% endif %}
+      </div>
     </div>
-</div>
+  </div>
+  {% else %}
+  <div class="container">
+    <div class="layout__box">
+      <div class="layout__boxHeader">
+        <div class="layout__boxTitle">
+          <h3>Register</h3>
+        </div>
+      </div>
+      <div class="layout__body">
+        <h2 class="auth__tagline">Find your study partner</h2>
+
+        <form class="form" action="" method="POST">
+          {% csrf_token %}
+
+          {% for field in form %}
+          <div class="form__group form__group">
+            <label for="room_name">{{field.label}}</label>
+            {{field}}
+          </div>
+          {% endfor %}
+
+
+          <button class="btn btn--main" type="submit">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+              <title>lock</title>
+              <path
+                d="M27 12h-1v-2c0-5.514-4.486-10-10-10s-10 4.486-10 10v2h-1c-0.553 0-1 0.447-1 1v18c0 0.553 0.447 1 1 1h22c0.553 0 1-0.447 1-1v-18c0-0.553-0.447-1-1-1zM8 10c0-4.411 3.589-8 8-8s8 3.589 8 8v2h-16v-2zM26 30h-20v-16h20v16z">
+              </path>
+              <path
+                d="M15 21.694v4.306h2v-4.306c0.587-0.348 1-0.961 1-1.694 0-1.105-0.895-2-2-2s-2 0.895-2 2c0 0.732 0.413 1.345 1 1.694z">
+              </path>
+            </svg>
+
+            Register
+          </button>
+        </form>
+
+        <div class="auth__action">
+          <p>Already signed up yet?</p>
+          <a href="{% url 'login' %}" class="btn btn--link">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</main>
 {% endblock %}
