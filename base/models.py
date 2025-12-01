@@ -8,6 +8,15 @@ class Topic(models.Model):
     def __str__(self):
         return self.name
 
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    bio = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Profile'"
+
 class Room(models.Model):
     name = models.CharField(max_length=255)
     host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)

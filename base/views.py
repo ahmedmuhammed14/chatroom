@@ -4,8 +4,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth import authenticate, login, logout
-from .models import Room, Topic, Message, User
-from .forms import RoomForm, UserForm, MyUserCreationForm
+from .models import Room, Topic, Message, User, Profile
+from .forms import RoomForm, UserForm, MyUserCreationForm, ProfileForm
 
 
 def loginPage(request):
@@ -19,10 +19,10 @@ def loginPage(request):
 
         try:
             user = User.objects.get(email=email)
-        except:
+            user = authenticate(request, username=user.username, password=password)
+        except User.DoesNotExist:
+            user = None
             messages.error(request, 'User does not exist')
-
-        user = authenticate(request, email=email, password=password)
 
         if user is not None:
             login(request, user)
@@ -77,7 +77,7 @@ def home(request):
 
 def room(request, pk):
     room = Room.objects.get(id=pk)
-    room_messages = room.message_set.all()
+    room_messages = room.messages.all()
     participants = room.participants.all()
 
     if request.method == 'POST':
@@ -174,15 +174,22 @@ def deleteMessage(request, pk):
 @login_required(login_url='login')
 def updateUser(request):
     user = request.user
-    form = UserForm(instance=user)
+    profile, created = Profile.objects.get_or_create(user=user)
+
+    user_form = UserForm(instance=user)
+    profile_form = ProfileForm(instance=profile)
 
     if request.method == 'POST':
-        form = UserForm(request.POST, request.FILES, instance=user)
-        if form.is_valid():
-            form.save()
+        user_form = UserForm(request.POST, instance=user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
             return redirect('user-profile', pk=user.id)
 
-    return render(request, 'base/update-user.html', {'form': form})
+    context = {'user_form': user_form, 'profile_form': profile_form}
+    return render(request, 'base/update-user.html', context)
 
 
 def topicsPage(request):
