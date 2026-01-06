@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
@@ -204,3 +204,28 @@ def topicsPage(request):
 def activityPage(request):
     room_messages = Message.objects.all()
     return render(request, 'base/activity.html', {'room_messages': room_messages})
+
+
+def dashboard_stats(request):
+    # Count total rooms, topics, messages, and users
+    total_rooms = Room.objects.count()
+    total_topics = Topic.objects.count()
+    total_messages = Message.objects.count()
+    total_users = User.objects.count()
+
+    # Recent rooms created
+    recent_rooms = Room.objects.all().order_by('-created')[:5]
+
+    # Recent messages
+    recent_messages = Message.objects.all().order_by('-created')[:5]
+
+    data = {
+        'total_rooms': total_rooms,
+        'total_topics': total_topics,
+        'total_messages': total_messages,
+        'total_users': total_users,
+        'recent_rooms': [{'id': room.id, 'name': room.name, 'created': room.created} for room in recent_rooms],
+        'recent_messages': [{'id': msg.id, 'body': msg.body[:50], 'created': msg.created, 'username': msg.user.username} for msg in recent_messages],
+    }
+
+    return JsonResponse(data)
